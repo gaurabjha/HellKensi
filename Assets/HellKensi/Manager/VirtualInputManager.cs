@@ -9,5 +9,7 @@ namespace HellKensi
 
         public bool MoveLeft;
         public bool MoveRight;
+        public bool Jump;
+        public bool ForceTransition;
     }
 }

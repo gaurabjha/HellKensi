@@ -9,17 +9,25 @@ namespace HellKensi
 
         public List<StateData> ListAbilityData = new List<StateData>();
 
-        public void UpdateAll(CharacterState characterState , Animator animator)
+        public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            foreach(StateData abelity in ListAbilityData)
+            foreach(StateData state in ListAbilityData)
             {
-                abelity.UpdateAll(characterState, animator);
+                state.OnEnter(this, animator, stateInfo);
+            }
+        }
+
+        public void UpdateAll(CharacterState characterState , Animator animator, AnimatorStateInfo animatorStateInfo )
+        {
+            foreach(StateData ability in ListAbilityData)
+            {
+                ability.UpdateAbility(characterState, animator, animatorStateInfo);
             }
         }
 
         public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            UpdateAll(this, animator);
+            UpdateAll(this, animator, stateInfo);
         }
 
         private CharacterController _characterController;
@@ -32,5 +40,12 @@ namespace HellKensi
             return _characterController;
         }
 
+        public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        {
+            foreach (StateData state in ListAbilityData)
+            {
+                state.OnExit(this, animator, stateInfo);
+            }
+        }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace HellKensi
 {
@@ -25,6 +23,15 @@ namespace HellKensi
             else
             {
                 VirtualInputManager.Instance.MoveLeft = false;
+            }
+
+            if (Input.GetKey(KeyCode.Space))
+            {
+                VirtualInputManager.Instance.Jump = true;
+            }
+            else
+            {
+                VirtualInputManager.Instance.Jump = false;
             }
 
         }
