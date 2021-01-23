@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6716445767802966906}
   - component: {fileID: 6716445767802966905}
   - component: {fileID: 6716445767802966904}
-  - component: {fileID: 6716445767802966900}
+  - component: {fileID: 7822591849947810053}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -50,7 +50,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6716445767802966911}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -95,7 +95,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6716445767802966900
+--- !u!114 &7822591849947810053
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,7 +107,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73bf0a827e55a46deb6a20abe4fbbf0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 5
+  Speed: 2
+  animator: {fileID: 0}
 --- !u!1001 &6716445767174314835
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -115,6 +116,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6716445767802966907}
     m_Modifications:
+    - target: {fileID: -6057140222963153312, guid: 320b1c2af77554f99a1658df4a6d3d5c,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: ff6afa4c37efa4a63b491cfd0fc09fca, type: 2}
+    - target: {fileID: -6057140222963153312, guid: 320b1c2af77554f99a1658df4a6d3d5c,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 320b1c2af77554f99a1658df4a6d3d5c,
         type: 3}
       propertyPath: m_RootOrder

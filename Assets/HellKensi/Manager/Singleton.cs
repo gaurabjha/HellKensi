@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HellKensi
 {
-    public class Singleton<T> : MonoBehaviour where T: MonoBehaviour
+    public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         private static T _instance;
 
@@ -13,7 +13,8 @@ namespace HellKensi
             get
             {
                 _instance = (T)FindObjectOfType(typeof(T));
-                if( _instance == null)
+
+                if (_instance == null)
                 {
                     GameObject obj = new GameObject();
                     _instance = obj.AddComponent<T>();
