@@ -6,33 +6,48 @@ namespace HellKensi
     public class MoveForward : StateData
     {
         public float Speed;
+        public AnimationCurve SpeedGraph;
+        public float BlockDistance;
 
         public override void UpdateAbility(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
         {
-            CharacterController characterController = characterState.GetCharacterController(animator);
+            CharacterController control = characterState.GetCharacterController(animator);
 
-            if (characterController.MoveRight && characterController.MoveLeft)
+            if (control.Jump)
+            {
+                animator.SetBool(TransitionParameters.Jump.ToString(), true);
+            }
+
+            if (control.MoveRight && control.MoveLeft)
             {
                 animator.SetBool(TransitionParameters.Move.ToString(), false);
                 return;
             }
 
-            if (!characterController.MoveRight && !characterController.MoveLeft)
+            if (!control.MoveRight && !control.MoveLeft)
             {
                 animator.SetBool(TransitionParameters.Move.ToString(), false);
                 return;
             }
 
-            if (characterController.MoveRight)
+            if (control.MoveRight)
             {
-                characterController.transform.Translate(Vector3.forward * Speed * Time.deltaTime);
-                characterController.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-            }
-            if (characterController.MoveLeft)
-            {
-                characterController.transform.Translate(Vector3.forward * Speed * Time.deltaTime);
-                characterController.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+                control.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
 
+                if (!CheckFront(control))
+                {
+                    control.transform.Translate(Vector3.forward * Speed * SpeedGraph.Evaluate(stateInfo.normalizedTime) * Time.deltaTime);
+                }
+
+            }
+            if (control.MoveLeft)
+            {
+                control.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+
+                if (!CheckFront(control))
+                {
+                    control.transform.Translate(Vector3.forward * Speed * SpeedGraph.Evaluate(stateInfo.normalizedTime) * Time.deltaTime);
+                }
             }
         }
         public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
@@ -43,6 +58,21 @@ namespace HellKensi
         public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
         {
 
+        }
+
+        bool CheckFront(CharacterController controller)
+        {
+
+            foreach (GameObject o in controller.FrontSpheres)
+            {
+                Debug.DrawRay(o.transform.position, controller.transform.forward * 0.3f, Color.red);
+                RaycastHit hit;
+                if (Physics.Raycast(o.transform.position, controller.transform.forward, out hit, BlockDistance))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

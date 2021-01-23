@@ -11,7 +11,7 @@ namespace HellKensi
 
         public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
         {
-
+            animator.SetBool(TransitionParameters.Grounded.ToString(), false);
         }
 
         public override void UpdateAbility(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
@@ -37,17 +37,21 @@ namespace HellKensi
 
         bool IsGrounded(CharacterController controller)
         {
-            if (controller.RIGID_BODY.velocity.y > -0.01f && controller.RIGID_BODY.velocity.y <= 0f)
+            if (controller.RIGID_BODY.velocity.y > -0.011f && controller.RIGID_BODY.velocity.y <= 0f)
             {
                 return true;
             }
-            foreach (GameObject o in controller.BottomSpheres)
+
+            if (controller.RIGID_BODY.velocity.y < 0f)
             {
-                Debug.DrawRay(o.transform.position, -Vector3.up * 0.75f, Color.red);
-                RaycastHit hit;
-                if (Physics.Raycast(o.transform.position, -Vector3.up, out hit, Distance))
+                foreach (GameObject o in controller.BottomSpheres)
                 {
-                    return true;
+                    Debug.DrawRay(o.transform.position, -Vector3.up * 0.75f, Color.red);
+                    RaycastHit hit;
+                    if (Physics.Raycast(o.transform.position, -Vector3.up, out hit, Distance))
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
