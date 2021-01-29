@@ -11,7 +11,7 @@ namespace HellKensi
 
         public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
         {
-            animator.SetBool(TransitionParameters.Grounded.ToString(), false);
+            //animator.SetBool(TransitionParameters.Grounded.ToString(), false);
         }
 
         public override void UpdateAbility(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
@@ -50,7 +50,7 @@ namespace HellKensi
                     RaycastHit hit;
                     if (Physics.Raycast(o.transform.position, -Vector3.up, out hit, Distance))
                     {
-                        return true;
+                        if (!controller.RagdollParts.Contains(hit.collider)) { return true; }
                     }
                 }
             }

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29d254e84323640bfb63bb31e463e64e, type: 3}
+  m_Name: Player_Attack_CrossJab
+  m_EditorClassIdentifier: 
+  StartAttackTime: 0.25
+  EndAttackTime: 0.55
+  ColliderNames:
+  - RightHand
+  MustCollide: 1
+  MustFaceAttacker: 0
+  LethalRange: 0
+  maxHits: 1
+  DeathAnimators:
+  - {fileID: 9100000, guid: a86bf9e15d4f4476784597fa696039dc, type: 2}

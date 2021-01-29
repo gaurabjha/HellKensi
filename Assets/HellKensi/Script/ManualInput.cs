@@ -19,6 +19,7 @@ namespace HellKensi
             if (VirtualInputManager.Instance.MoveRight) { controller.MoveRight = true; } else { controller.MoveRight = false; }
             if (VirtualInputManager.Instance.MoveLeft) { controller.MoveLeft = true; } else { controller.MoveLeft = false; }
             if (VirtualInputManager.Instance.Jump) { controller.Jump = true; } else { controller.Jump = false; }
+            if (VirtualInputManager.Instance.Attack) { controller.Attack = true; } else { controller.Attack = false; }
         }
     }
 

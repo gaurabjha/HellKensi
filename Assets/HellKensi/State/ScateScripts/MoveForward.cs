@@ -5,9 +5,15 @@ namespace HellKensi
     [CreateAssetMenu(fileName = "New Ability", menuName = "CurlyGames/Abilities/MoveForward")]
     public class MoveForward : StateData
     {
+        public bool Reflex;
         public float Speed;
         public AnimationCurve SpeedGraph;
         public float BlockDistance;
+
+        public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
+        {
+            animator.SetBool(TransitionParameters.Jump.ToString(), false);
+        }
 
         public override void UpdateAbility(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
         {
@@ -18,6 +24,19 @@ namespace HellKensi
                 animator.SetBool(TransitionParameters.Jump.ToString(), true);
             }
 
+            if (Reflex) { ReflexMove(control, animator, stateInfo); }
+            else { ControledMove(control, animator, stateInfo); }
+
+        }
+
+        private void ReflexMove(CharacterController control, Animator animator, AnimatorStateInfo stateInfo)
+        {
+            control.MoveForward(Speed, SpeedGraph.Evaluate(stateInfo.normalizedTime));
+        }
+
+
+        private void ControledMove(CharacterController control, Animator animator, AnimatorStateInfo stateInfo)
+        {
             if (control.MoveRight && control.MoveLeft)
             {
                 animator.SetBool(TransitionParameters.Move.ToString(), false);
@@ -36,7 +55,7 @@ namespace HellKensi
 
                 if (!CheckFront(control))
                 {
-                    control.transform.Translate(Vector3.forward * Speed * SpeedGraph.Evaluate(stateInfo.normalizedTime) * Time.deltaTime);
+                    control.MoveForward(Speed, SpeedGraph.Evaluate(stateInfo.normalizedTime));
                 }
 
             }
@@ -46,18 +65,14 @@ namespace HellKensi
 
                 if (!CheckFront(control))
                 {
-                    control.transform.Translate(Vector3.forward * Speed * SpeedGraph.Evaluate(stateInfo.normalizedTime) * Time.deltaTime);
+                    control.MoveForward(Speed, SpeedGraph.Evaluate(stateInfo.normalizedTime));
                 }
             }
-        }
-        public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
-        {
-            animator.SetBool(TransitionParameters.Jump.ToString(), false);
         }
 
         public override void OnExit(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
         {
-
+            animator.SetBool(TransitionParameters.Attack.ToString(), false);
         }
 
         bool CheckFront(CharacterController controller)
@@ -65,13 +80,42 @@ namespace HellKensi
 
             foreach (GameObject o in controller.FrontSpheres)
             {
-                Debug.DrawRay(o.transform.position, controller.transform.forward * 0.3f, Color.red);
+                Debug.DrawRay(o.transform.position, controller.transform.forward * 0.3f, Color.cyan);
                 RaycastHit hit;
                 if (Physics.Raycast(o.transform.position, controller.transform.forward, out hit, BlockDistance))
                 {
-                    return true;
+                    if (!controller.RagdollParts.Contains(hit.collider))
+                    {
+                        if (!IsBodyPart(hit.collider))
+                        {
+                            //Debug.Log("Obstracle " + hit.collider.gameObject.name);
+                            return true;
+                        }
+                    }
                 }
             }
+            return false;
+        }
+
+        bool IsBodyPart(Collider col)
+        {
+            CharacterController control = col.transform.root.GetComponent<CharacterController>();
+
+            if (control == null)
+            {
+                return false;
+            }
+
+            if( control.gameObject == col.gameObject)
+            {
+                return false;
+            }
+
+            if(control.RagdollParts.Contains(col))
+            {
+                return true;
+            }
+
             return false;
         }
     }

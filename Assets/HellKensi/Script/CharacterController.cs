@@ -12,21 +12,27 @@ namespace HellKensi
         Jump,
         ForceTransition,
         Grounded,
+        Attack,
     }
     public class CharacterController : Singleton<CharacterController>
     {
         public float Speed;
-        public Animator animator;
+        public Animator SkinnedMeshAnimator;
 
         public bool MoveLeft;
         public bool MoveRight;
         public bool Jump;
+        public bool Attack;
 
         public GameObject ColliderEdgePrefab;
         [HideInInspector]
         public List<GameObject> BottomSpheres = new List<GameObject>();
         [HideInInspector]
         public List<GameObject> FrontSpheres = new List<GameObject>();
+        //[HideInInspector]
+        public List<Collider> RagdollParts = new List<Collider>();
+        //[HideInInspector]
+        public List<Collider> CollidingParts = new List<Collider>();
 
 
         public float GravityMultiplier;
@@ -45,7 +51,64 @@ namespace HellKensi
             }
         }
 
+
+        IEnumerator TestRagDoll()
+        {
+            yield return new WaitForSeconds(5f);
+            RIGID_BODY.AddForce(300f * Vector3.up);
+            yield return new WaitForSeconds(0.5f);
+            TurnOnRagdoll();
+        }
+
         private void Awake()
+        {
+
+            bool SwitchBack = false;
+            if (!IsFacingForward()) { SwitchBack = true; }
+            FaceForward(true);
+            PrepareRagDoll();
+            CreateEdgeCollider();
+            FaceForward(!SwitchBack);
+
+        }
+
+        internal void MoveForward(float speed, float SpeedGraph)
+        {
+            //Debug.Log("moving Foward");
+            transform.Translate(Vector3.forward * speed * SpeedGraph * Time.deltaTime);
+        }
+
+       
+
+        private void PrepareRagDoll()
+        {
+            Collider[] childColliders = this.gameObject.GetComponentsInChildren<Collider>();
+
+            foreach(Collider childCol in childColliders)
+            {
+                if(childCol.gameObject != this.gameObject)
+                {
+                    childCol.isTrigger = true;
+                    RagdollParts.Add(childCol);
+                    childCol.gameObject.AddComponent<TriggerDetector>();
+                }
+            }
+        }
+
+        public void TurnOnRagdoll()
+        {
+            RIGID_BODY.useGravity = false;
+            RIGID_BODY.velocity = Vector3.zero;
+            this.gameObject.GetComponent<BoxCollider>().enabled = false;
+            SkinnedMeshAnimator.enabled = false; SkinnedMeshAnimator.avatar = null;
+
+            foreach (Collider childCol in RagdollParts)
+            {
+                    childCol.isTrigger = false;
+            }
+        }
+
+        private void CreateEdgeCollider()
         {
             BoxCollider box = GetComponent<BoxCollider>();
 
@@ -64,7 +127,7 @@ namespace HellKensi
             bottomBack.transform.parent = this.transform;
             bottomFront.transform.parent = this.transform;
             topFront.transform.parent = this.transform;
-            
+
 
 
             BottomSpheres.Add(bottomFront);
@@ -79,8 +142,6 @@ namespace HellKensi
 
             sec = (topFront.transform.position - bottomFront.transform.position).magnitude / 10;
             CreateMiddleSpheres(bottomFront, this.transform.up, sec, 9, FrontSpheres);
-
-
         }
 
         private void FixedUpdate()
@@ -115,6 +176,20 @@ namespace HellKensi
             return obj;
         }
 
+        public void FaceForward(bool forward)
+        {
+            if (forward)
+            {
+                transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+            }
+            else{
+                transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+            }
+        }
 
+        public bool IsFacingForward()
+        {
+            if(transform.forward.z > 0f) { return true; }else { return false; }
+        }
     }
 }

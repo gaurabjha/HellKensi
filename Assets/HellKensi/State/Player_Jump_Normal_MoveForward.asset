@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce28280ec8b2243cf8553d384b9daf5d, type: 3}
   m_Name: Player_Jump_Normal_MoveForward
   m_EditorClassIdentifier: 
+  Reflex: 0
   Speed: 2
   SpeedGraph:
     serializedVersion: 2

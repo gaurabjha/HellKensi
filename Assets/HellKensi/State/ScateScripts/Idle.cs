@@ -14,6 +14,13 @@ namespace HellKensi
         {
             {
                 CharacterController controller = characterState.GetCharacterController(animator);
+
+                if (controller.Attack)
+                {
+                    //Debug.Log("Idle to Attack");
+                    animator.SetBool(TransitionParameters.Attack.ToString(), true);
+                }
+
                 if (controller.Jump)
                 {
                     animator.SetBool(TransitionParameters.Jump.ToString(), true);

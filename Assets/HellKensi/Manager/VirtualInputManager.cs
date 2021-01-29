@@ -11,5 +11,6 @@ namespace HellKensi
         public bool MoveRight;
         public bool Jump;
         public bool ForceTransition;
+        public bool Attack;
     }
 }
