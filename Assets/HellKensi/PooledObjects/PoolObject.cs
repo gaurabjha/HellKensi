@@ -19,6 +19,7 @@ namespace HellKensi
             }
             if (ScheduleEndAttackTime > 0f) { EndAttackScheduler = StartCoroutine(_ScheduleEndAttack()); }
         }
+
         public void EndAttack()
         {
             PoolManager.Instance.AddGameObject(this);
@@ -27,10 +28,9 @@ namespace HellKensi
         IEnumerator _ScheduleEndAttack()
         {
             yield return new WaitForSeconds(ScheduleEndAttackTime);
-
-            if (PoolManager.Instance.PoolDictionary[PoolObjectType.ATTACKINFO].Contains(this.gameObject))
+            if (!PoolManager.Instance.PoolDictionary[poolObjectType].Contains(this.gameObject))
             {
-                GetComponent<PoolObject>().EndAttack();
+                EndAttack();
             }
         }
     }

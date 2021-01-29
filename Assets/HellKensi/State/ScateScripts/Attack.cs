@@ -21,6 +21,8 @@ namespace HellKensi
         public int maxHits;
         public List<RuntimeAnimatorController> DeathAnimators = new List<RuntimeAnimatorController>();
 
+        public List<AttackInfo> FinishedAttack = new List<AttackInfo>();
+
 
         public override void OnEnter(CharacterState characterState, Animator animator, AnimatorStateInfo stateInfo)
         {
@@ -82,13 +84,24 @@ namespace HellKensi
         {
             ClearAttack();
         }
+
         public void ClearAttack()
         {
-            for(int i = 0; i < AttackManager.Instance.CurrentAttacks.Count; i++)
-            {
-                if(AttackManager.Instance.CurrentAttacks[i] == null || AttackManager.Instance.CurrentAttacks[i].isFinished){
-                    AttackManager.Instance.CurrentAttacks.RemoveAt(i);
 
+            FinishedAttack.Clear();
+
+            foreach(AttackInfo info in AttackManager.Instance.CurrentAttacks)
+            {
+                if(info != null || info.isFinished)
+                {
+                    FinishedAttack.Add(info);
+                }
+            }
+
+            foreach (AttackInfo info in FinishedAttack)
+            {
+                if(AttackManager.Instance.CurrentAttacks.Contains(info)){
+                    AttackManager.Instance.CurrentAttacks.Remove(info);
                 }
             }
         }
